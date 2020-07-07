@@ -1,8 +1,8 @@
-import random as r
+import ast
 import math
 import numpy as np
+import random as r
 import yaml
-import ast
 
 logsig = lambda val: 1 / (1 + math.exp(-val))
 vlogsig = np.vectorize(logsig)
@@ -83,8 +83,8 @@ class ANN(object):
 
 
         for i in range(self.num_layers-1):
-            if i == 0:
-                self.H[i] = self.image_data  # this is the magic line
+            # if i == 0:
+            #     self.H[i] = self.image_data  # this is the magic line
             for j in range(self.arch[i]):
                 self.w[i][j] -= np.dot(self.learning_rate * self.H[i][j], p[i+1])
 
@@ -150,3 +150,16 @@ class ANN(object):
 
         self.w = np.zeros((self.num_layers-1,max(self.arch),max(self.arch)))
         self.wb = np.zeros((self.num_layers-1,max(self.arch)))
+
+# TESTING
+inp = [10.0, 11.0, 12.0]
+tar = [0.0, 1.0, 0.0]
+mlp = ANN(0.01)
+mlp.init_network([3, 2, 3])
+while True:
+    x = mlp.forward_prop(0, inp, 'logsig')
+    y = mlp.forward_prop(1, x, 'logsig')
+    print(y)
+
+    mlp.back_prop(y, tar)
+    # exit()
